@@ -1,38 +1,32 @@
-## `library-name`
+## `loop-fns`
 
-Single paragraph about why this library exists
+A lightweight solution for looping with great performance and control.
 
 ## Get started
 
 Install
 
 ```bash
-yarn add library-name-fns
+yarn add loop-fns
 # or
-npm install --save library-name-fns
+npm install --save loop-fns
 ```
 
 Use
 
 ```typescript
-import { noop } from 'library-name-fns'
+import { loopFrames } from 'loop-fns'
 
-console.log(noop()) // undefined
+const loop = loopFrames((currentFrame, delta, loop) => {
+  // your graphics update logic...
+
+  if (currentFrame === 10) {
+    // the same handlers that are returned by loopFrames are also available here
+    loop.stop()
+  }
+}, 30) // limit to 30fps
+
+loop.start()
 ```
 
-[Examples](https://github.com/skulptur/library-name-fns/tree/master/example)
-
-## API
-
-- Pure functions.
-- The argument order is optimized for partial application.
-
-Exports:
-
-### noop
-
-`() => void`
-
-```typescript
-const nothing = noop() // undefined
-```
+<!-- [Examples](https://github.com/skulptur/loop-fns/tree/master/example) -->

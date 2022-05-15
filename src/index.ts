@@ -1,1 +1,1 @@
-export { noop } from './lib/noop'
+export { loopFrames } from './lib/loopFrames'
