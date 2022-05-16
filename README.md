@@ -17,16 +17,16 @@ Use
 ```typescript
 import { loopFrames } from 'loop-fns'
 
-const loop = loopFrames((currentFrame, delta, loop) => {
+const props = loopFrames((props) => {
   // your graphics update logic...
 
-  if (currentFrame === 10) {
-    // the same handlers that are returned by loopFrames are also available here
-    loop.stop()
+  // you can also control the loop within the callback
+  if (props.currentFrame === 10) {
+    props.stop()
   }
 }, 30) // limit to 30fps
 
-loop.start()
+props.start()
 ```
 
 <!-- [Examples](https://github.com/skulptur/loop-fns/tree/master/example) -->

@@ -1,7 +1,9 @@
 const oneSecond = 1000
 const noop = () => {}
 
-export type LoopFramesHandlers = {
+export type LoopFramesProps = {
+  currentFrame: number
+  delta: number
   start: () => void
   stop: () => void
   setFps: (fps: number) => void
@@ -10,51 +12,52 @@ export type LoopFramesHandlers = {
 // TODO:
 // implement pause
 export const loopFrames = (
-  onFrame: (currentFrame: number, delta: number, handlers: LoopFramesHandlers) => void,
+  onFrame: (props: Readonly<LoopFramesProps>) => void,
   fps: number = 60
 ) => {
   let fpsInterval = oneSecond / fps
-  let currentFrame = 0
   let startTime = NaN
   let lastTime = NaN
   let id = NaN
 
-  const handlers: LoopFramesHandlers = {
+  const props: LoopFramesProps = {
     start: noop,
     stop: noop,
     setFps: noop,
+    currentFrame: 0,
+    delta: 0,
   }
 
   const step = (now: number) => {
-    const delta = now - lastTime
+    props.delta = now - lastTime
 
-    if (delta > fpsInterval) {
+    if (props.delta > fpsInterval) {
       const elapsedTime = now - startTime
       // adjust for fpsInterval not being multiple of 16.67
       lastTime = now - (elapsedTime % fpsInterval)
-      currentFrame++
-      onFrame(currentFrame, delta, handlers)
+      props.currentFrame++
+      onFrame(props)
     }
     id = requestAnimationFrame(step)
   }
 
-  handlers.start = () => {
+  props.start = () => {
     if (!isNaN(id)) return
     startTime = performance.now()
     lastTime = startTime
-    requestAnimationFrame(() => onFrame(currentFrame, 0, handlers))
+    requestAnimationFrame(() => onFrame(props))
     id = requestAnimationFrame(step)
   }
 
-  handlers.stop = () => {
+  props.stop = () => {
     cancelAnimationFrame(id)
     id = NaN
-    currentFrame = 0
+    props.currentFrame = 0
   }
 
-  handlers.setFps = (fps: number) => {
+  props.setFps = (fps: number) => {
     fpsInterval = oneSecond / fps
   }
 
-  return handlers
+  return props
 }

@@ -1,1 +1,1 @@
-export { loopFrames } from './lib/loopFrames'
+export { loopFrames, LoopFramesProps } from './lib/loopFrames'
